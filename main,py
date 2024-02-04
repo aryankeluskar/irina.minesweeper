@@ -1,0 +1,134 @@
+import subprocess
+import warnings
+import pyautogui
+import time
+from PIL import ImageGrab
+import pygetwindow as gw
+
+# Suppress all warnings
+warnings.filterwarnings("ignore")
+
+# Specify the path to the .exe file
+exe_path = 'Y:\Downloads\WINMINE.EXE'
+
+# Open the .exe file
+# process = subprocess.Popen(exe_path)
+# open the window
+print('Minesweeper opened successfully!')
+
+time.sleep(2)
+mine_window = gw.getWindowsWithTitle('Minesweeper')
+mine_window[0].activate()
+# print(mine_window)
+
+mineMap = [[] for i in range(9)]
+for i in range(9):
+    mineMap[i] = [0 for j in range(9)]
+
+# print(mineMap)
+
+mineProb = [[0 for i in range(9)] for j in range(9)]
+
+# Define the RGB values as constants
+ONE = (0, 0, 255)
+TWO = (0,128,0)
+THREE = (255, 0, 0)
+OPENED = (192, 192, 192)
+MINE = (0,0,0)
+LINE = (173, 173, 173)
+LINE2 = (128, 128, 128)
+
+# Create a hashmap to store the RGB values
+color_map = {
+    THREE: "THREE",
+    TWO: "TWO",
+    ONE: "ONE",
+    OPENED: "OPENED",
+    MINE: "MINE"
+}
+
+# Use pyautogui to perform actions
+# pyautogui.click(x=208, y=188)  # Click at coordinates (x=100, y=100)
+
+time.sleep(2)
+
+
+def get_pixel_color(x, y):
+    screenshot = ImageGrab.grab(bbox=(x, y, x+1, y+1))
+    color = screenshot.getpixel((0, 0))
+    return color
+
+def get_actual_pixel_color(i, j):
+    # Get RGB values at the cursor position
+    pixel_color = get_pixel_color(i, j)
+
+    ogCords = (i, j)
+    # Query the hashmap to get the corresponding color
+    color_name = color_map.get(pixel_color, "Unknown")
+
+    for dx in range(-2, 2):
+        for dy in range(-2, 2):
+            if dx == 0 and dy == 0:
+                continue
+            pixel_color = get_pixel_color(i + dx, j + dy)
+            if pixel_color == ONE:
+                color_name = "ONE"
+                pyautogui.moveTo(x=ogCords[0], y=ogCords[1])
+                break
+            if pixel_color == TWO:
+                color_name = "TWO"
+                pyautogui.moveTo(x=ogCords[0], y=ogCords[1])
+                break
+            if pixel_color == THREE:
+                color_name = "THREE"
+                pyautogui.moveTo(x=ogCords[0], y=ogCords[1])
+                break                 
+            if pixel_color == MINE:
+                color_name = "MINE"
+                pyautogui.moveTo(x=ogCords[0], y=ogCords[1])
+                break
+
+    print(f"Color at cursor position ({i}, {j}): {color_name}")
+    return color_name
+    # time.sleep(1)
+    
+    
+# for j in range(238, 238+9*20, 20):
+#     for i in range(128, 128+9*20, 20):
+
+# for i in range(0,9):
+#     for j in range(0,9):
+#         # bring the cursor to the position without clicking
+#         # pyautogui.moveTo(128+j*20, 238+i*20)
+#         curr = get_actual_pixel_color(128+j*20, 238+i*20)
+#         if curr == "ONE":
+#             mineMap[i][j] = 1
+#         elif curr == "TWO":
+#             mineMap[i][j] = 2
+#         elif curr == "THREE":
+#             mineMap[i][j] = 3
+#         elif curr == "MINE":
+#             mineMap[i][j] = -1
+#         else:
+#             mineMap[i][j] = 0
+
+# for row in mineMap:
+#     print(row)
+
+for i in range(0,9):
+    print("curr row: ", i)
+    lines = 0
+    for j in range(128, 128*9+20):
+        if get_pixel_color(j, 238+i*20) == ONE:
+            print("ONE found")
+            mineMap[i][lines] = 1
+            while get_pixel_color(j, 238+i*20) == LINE:
+                pass
+        if get_pixel_color(j, 238+i*20) == LINE or get_pixel_color(j, 238+i*20) == LINE2:
+            lines += 1
+            print("Line found")
+        
+    print("lines: ", lines)
+
+for row in mineMap:
+    print(row)
