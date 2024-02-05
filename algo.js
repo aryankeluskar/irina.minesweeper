@@ -947,59 +947,59 @@ function ruleOne(mineGrid) {
     return ret;
 }
 
-// Count how many cells with one hundred probability are around a cell
-function probabilityHundredCount(mineGrid, i, j) {
-    let count = 0;
-    // Left
-    if (j > 0) {
-        if (mineGrid[i][j-1].probability == 100) {
-            count++;
+    // Count how many cells with one hundred probability are around a cell
+    function probabilityHundredCount(mineGrid, i, j) {
+        let count = 0;
+        // Left
+        if (j > 0) {
+            if (mineGrid[i][j-1].probability == 100) {
+                count++;
+            }
         }
-    }
-    // Upper Left
-    if (i > 0 && j > 0) {
-        if (mineGrid[i-1][j-1].probability == 100) {
-            count++;
+        // Upper Left
+        if (i > 0 && j > 0) {
+            if (mineGrid[i-1][j-1].probability == 100) {
+                count++;
+            }
         }
-    }
-    // Up
-    if (i > 0) {
-        if (mineGrid[i-1][j].probability == 100) {
-            count++;
+        // Up
+        if (i > 0) {
+            if (mineGrid[i-1][j].probability == 100) {
+                count++;
+            }
         }
-    }
-    // Upper Right
-    if (i > 0 && j < (numColumns-1)) {
-        if (mineGrid[i-1][j+1].probability == 100) {
-            count++;
+        // Upper Right
+        if (i > 0 && j < (numColumns-1)) {
+            if (mineGrid[i-1][j+1].probability == 100) {
+                count++;
+            }
         }
-    }
-    // Right
-    if (j < (numColumns-1)) {
-        if (mineGrid[i][j+1].probability == 100) {
-            count++;
+        // Right
+        if (j < (numColumns-1)) {
+            if (mineGrid[i][j+1].probability == 100) {
+                count++;
+            }
         }
-    }
-    // Bottom Right
-    if (i < (numRows-1) && j < (numColumns-1)) {
-        if (mineGrid[i+1][j+1].probability == 100) {
-            count++;
+        // Bottom Right
+        if (i < (numRows-1) && j < (numColumns-1)) {
+            if (mineGrid[i+1][j+1].probability == 100) {
+                count++;
+            }
         }
-    }
-    // Bottom
-    if (i < (numRows-1)) {
-        if (mineGrid[i+1][j].probability == 100) {
-            count++;
+        // Bottom
+        if (i < (numRows-1)) {
+            if (mineGrid[i+1][j].probability == 100) {
+                count++;
+            }
         }
-    }
-    // Bottom Left
-    if (i < (numRows-1) && j > 0) {
-        if (mineGrid[i+1][j-1].probability == 100) {
-            count++;
+        // Bottom Left
+        if (i < (numRows-1) && j > 0) {
+            if (mineGrid[i+1][j-1].probability == 100) {
+                count++;
+            }
         }
+        return count;
     }
-    return count;
-}
 
 // Label cells that must not be a mine by basic logic rules
 function ruleTwo(mineGrid) {

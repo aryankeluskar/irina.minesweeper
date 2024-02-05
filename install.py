@@ -1,6 +1,6 @@
 import pip
 import sys  
-package = 'selenium'
+package = 'pygame'
 if not package in sys.modules:
     pip.main(['install', package])
 
