@@ -50,10 +50,10 @@ probsBoard = [[] for i in range(9)]
 for i in range(9):
     probsBoard[i] = [0 for j in range(9)]        
 
-time.sleep(2)
 mine_window = gw.getWindowsWithTitle('Minesweeper')
 if not mine_window:
     process = subprocess.Popen(exe_path)
+    time.sleep(2)
 mine_window[0].activate()
 
 print('Minesweeper opened successfully!')
@@ -61,9 +61,9 @@ print('Minesweeper opened successfully!')
 top_left_x, top_left_y = 121,226
 bottom_right_x, bottom_right_y = 121+ROWS*20, 226+COLS*20
 
-screenshot = pyautogui.screenshot(region=(top_left_x, top_left_y, bottom_right_x - top_left_x, bottom_right_y - top_left_y))
+# screenshot = pyautogui.screenshot(region=(top_left_x, top_left_y, bottom_right_x - top_left_x, bottom_right_y - top_left_y))
 
-screenshot.save('ss.png')
+# screenshot.save('ss.png')
 
 def getCell(top_left_x, top_left_y, bottom_right_x, bottom_right_y):
     region_screenshot = ImageGrab.grab(bbox=(top_left_x, top_left_y, bottom_right_x, bottom_right_y))
@@ -96,12 +96,16 @@ def obtain_mine():
                 mineMap[i][j] = None
             if currCell == "One":
                 mineMap[i][j] = 1
+                alrClicked[i][j] = True
             elif currCell == "Two":
                 mineMap[i][j] = 2
+                alrClicked[i][j] = True
             elif currCell == "Three":
                 mineMap[i][j] = 3
+                alrClicked[i][j] = True
             elif currCell == "Four":
                 mineMap[i][j] = 4
+                alrClicked[i][j] = True
             elif currCell == "Mine":
                 mineMap[i][j] = -1
     return mineMap
@@ -151,4 +155,4 @@ while True:
                     min_prob_cell = (i, j)
 
         pyautogui.click(121 + min_prob_cell[1] * 20, 230 + min_prob_cell[0] * 20)
-        time.sleep(0.01)
+        # time.sleep(0.01)
