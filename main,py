@@ -40,10 +40,7 @@ exe_path = './WINMINE.EXE'
 
 probsBoard = [[] for i in range(9)]
 for i in range(9):
-    probsBoard[i] = [0 for j in range(9)]
-
-
-        
+    probsBoard[i] = [0 for j in range(9)]        
 
 time.sleep(2)
 mine_window = gw.getWindowsWithTitle('Minesweeper')
@@ -77,8 +74,6 @@ def getCell(top_left_x, top_left_y, bottom_right_x, bottom_right_y):
                 return "Four"
             elif pixel_color == MINE:
                 return "Mine"
-
-    region_screenshot.save('ss11.png')
 
 
 def obtain_mine():
