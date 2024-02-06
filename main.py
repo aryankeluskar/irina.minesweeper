@@ -1,12 +1,10 @@
 import subprocess
-import sys
 import warnings
 import pyautogui
 import time
 from PIL import ImageGrab
 import pygetwindow as gw
 from prob import *
-import win32api, win32con, win32gui
 import asyncio
 import concurrent.futures
 
@@ -14,6 +12,9 @@ import concurrent.futures
 ROWS = 9
 COLS = 9
 MINES = 10
+
+
+alrClicked = [[False for i in range(COLS)] for j in range(ROWS)]
 
 # Define the RGB values as constants
 ONE = (0, 0, 255)
@@ -24,7 +25,6 @@ MINE = (0,0,0)
 LINE = (173, 173, 173)
 LINE2 = (128, 128, 128)
 FOUR = (0,0,128)
-FIVE = (128,0,0)
 
 # Create a hashmap to store the RGB values
 color_map = {
@@ -33,8 +33,7 @@ color_map = {
     ONE: "ONE",
     OPENED: "OPENED",
     MINE: "MINE",
-    FOUR: "FOUR",
-    FIVE: "FIVE"
+    FOUR: "FOUR"
 }
 
 # Suppress all warnings
@@ -47,71 +46,68 @@ exe_path = './WINMINE.EXE'
 # process = subprocess.Popen(exe_path)
 # open the window
 
-probsBoard = [[] for i in range(ROWS)]
-for i in range(ROWS):
-    probsBoard[i] = [0 for j in range(COLS)]        
+probsBoard = [[] for i in range(9)]
+for i in range(9):
+    probsBoard[i] = [0 for j in range(9)]        
 
-mine_window = win32gui.FindWindow(None, "Minesweeper")
-print(mine_window)
-if mine_window != 0:
-    win32gui.ShowWindow(mine_window, win32con.SW_RESTORE)
-    win32gui.SetForegroundWindow(mine_window)
-else:
+mine_window = gw.getWindowsWithTitle('Minesweeper')
+if not mine_window:
     process = subprocess.Popen(exe_path)
     time.sleep(2)
-    pyautogui.click(229, 297)
-    pyautogui.click(178, 357)
-    pyautogui.click(263, 375)
-    # time.sleep(2)
-
+mine_window[0].activate()
 
 print('Minesweeper opened successfully!')
 # Get the screenshot of the Minesweeper window
 top_left_x, top_left_y = 121,226
 bottom_right_x, bottom_right_y = 121+ROWS*20, 226+COLS*20
 
-alrClicked = [[False for i in range(COLS)] for j in range(ROWS)]
-mineMap = [[] for i in range(ROWS)]
-for i in range(ROWS):
-    mineMap[i] = [0 for j in range(COLS)]
-
 # screenshot = pyautogui.screenshot(region=(top_left_x, top_left_y, bottom_right_x - top_left_x, bottom_right_y - top_left_y))
 
 # screenshot.save('ss.png')
 
-def getCell(top_left_x, top_left_y, bottom_right_x, bottom_right_y, mat_i, mat_j):
+def getCell(top_left_x, top_left_y, bottom_right_x, bottom_right_y):
     region_screenshot = ImageGrab.grab(bbox=(top_left_x, top_left_y, bottom_right_x, bottom_right_y))
     for i in range(region_screenshot.width):
         for j in range(region_screenshot.height):
             pixel_color = region_screenshot.getpixel((i, j))
-            if pixel_color == (192, 192, 192):
-                continue            
+            if pixel_color == (223, 223, 223):
+                return "Unopened"
             elif pixel_color == ONE:
-                mineMap[mat_i][mat_j] = 1
-                alrClicked[mat_i][mat_j] = True
+                return "One"
             elif pixel_color == TWO:
-                mineMap[mat_i][mat_j] = 2
-                alrClicked[mat_i][mat_j] = True
+                return "Two"
             elif pixel_color == THREE:
-                mineMap[mat_i][mat_j] = 3
-                alrClicked[mat_i][mat_j] = True
+                return "Three"
             elif pixel_color == FOUR:
-                mineMap[mat_i][mat_j] = 4
-                alrClicked[mat_i][mat_j] = True
-            elif pixel_color == FIVE:
-                mineMap[mat_i][mat_j] = 5
-                alrClicked[mat_i][mat_j] = True
+                return "Four"
             elif pixel_color == MINE:
-                # pyautogui.click(223, 194)
-                # sys.exit(0)
-                mineMap[mat_i][mat_j] = -1
-            else:
-                mineMap[mat_i][mat_j] = None
+                return "Mine"
+
 
 def obtain_mine():
+    mineMap = [[] for i in range(ROWS)]
     for i in range(ROWS):
-        for j in range(COLS):
-            getCell(121+j*20, 230+i*20, 137+j*20, 245+i*20, i, j)
+        mineMap[i] = [0 for j in range(COLS)]
+    for i in range(9):
+        for j in range(9):
+            currCell = getCell(121+j*20, 230+i*20, 137+j*20, 245+i*20)
+            # print(currCell)
+            if currCell == "Unopened":
+                mineMap[i][j] = None
+            if currCell == "One":
+                mineMap[i][j] = 1
+                alrClicked[i][j] = True
+            elif currCell == "Two":
+                mineMap[i][j] = 2
+                alrClicked[i][j] = True
+            elif currCell == "Three":
+                mineMap[i][j] = 3
+                alrClicked[i][j] = True
+            elif currCell == "Four":
+                mineMap[i][j] = 4
+                alrClicked[i][j] = True
+            elif currCell == "Mine":
+                mineMap[i][j] = -1
     return mineMap
 
 moved = False
@@ -125,11 +121,6 @@ while True:
         break
 
     mineMap = obtain_mine()
-    if all(cell is None for row in mineMap for cell in row):
-        pyautogui.click(229, 297)
-        pyautogui.click(178, 357)
-        pyautogui.click(263, 375)
-        mineMap = obtain_mine()
 
     for row in mineMap:
         print(row)
@@ -159,10 +150,9 @@ while True:
 
         for i in range(len(probsBoard)):
             for j in range(len(probsBoard[0])):
-                if not probsBoard[i][j] == None and probsBoard[i][j] < min_prob and not alrClicked[i][j]:
+                if not probsBoard[i][j] == None and probsBoard[i][j] < min_prob:
                     min_prob = probsBoard[i][j]
                     min_prob_cell = (i, j)
 
         pyautogui.click(121 + min_prob_cell[1] * 20, 230 + min_prob_cell[0] * 20)
-        alrClicked[min_prob_cell[0]][min_prob_cell[1]] = True
         # time.sleep(0.01)
