@@ -7,30 +7,29 @@ from PIL import ImageGrab
 from prob import *
 import win32con, win32gui
 
-ROWS = 16
-COLS = 16
-MINES = 40
+# top_left_x, top_left_y = 121,226
+# bottom_right_x, bottom_right_y = 121+ROWS*20, 226+COLS*20
+
+
+ROWS = 9
+COLS = 9
+MINES = 10
+MI_WINOW_TOP_LEFT_X = 120
+MI_WINOW_TOP_LEFT_Y = 225
+
 
 # Define the RGB values as constants
 ONE = (0, 0, 255)
 TWO = (0,128,0)
 TWO2 = (1,128,1)
 THREE = (255, 0, 0)
+FIVE = (128, 0, 0)
 OPENED = (192, 192, 192)
 MINE = (0,0,0)
 LINE = (173, 173, 173)
 LINE2 = (128, 128, 128)
 FOUR = (0,0,128)
-
-# Create a hashmap to store the RGB values
-color_map = {
-    THREE: "THREE",
-    TWO: "TWO",
-    ONE: "ONE",
-    OPENED: "OPENED",
-    MINE: "MINE",
-    FOUR: "FOUR"
-}
+SIX = (0,128,128)
 
 # Suppress all warnings
 warnings.filterwarnings("ignore")
@@ -59,14 +58,16 @@ else:
     win32gui.SetForegroundWindow(mine_window)
     time.sleep(5)
 
-pyautogui.click(228, 278)
-pyautogui.click(254, 361)
-pyautogui.click(160, 323)
+# pyautogui.click(228, 278)
+# pyautogui.click(254, 361)
+# pyautogui.click(160, 323)
+    
+pyautogui.click(MI_WINOW_TOP_LEFT_X+108, MI_WINOW_TOP_LEFT_Y+53)
+pyautogui.click(MI_WINOW_TOP_LEFT_X+134, MI_WINOW_TOP_LEFT_Y+361-225)
+pyautogui.click(MI_WINOW_TOP_LEFT_X+40, MI_WINOW_TOP_LEFT_Y+323-225)
 
 print('Minesweeper opened successfully!')
 # Get the screenshot of the Minesweeper window
-top_left_x, top_left_y = 121,226
-bottom_right_x, bottom_right_y = 121+ROWS*20, 226+COLS*20
 
 # screenshot = pyautogui.screenshot(region=(top_left_x, top_left_y, bottom_right_x - top_left_x, bottom_right_y - top_left_y))
 
@@ -74,12 +75,14 @@ bottom_right_x, bottom_right_y = 121+ROWS*20, 226+COLS*20
 
 def getCell(whole_ss, top_left_x, top_left_y, bottom_right_x, bottom_right_y, mat_i, mat_j):
     region_screenshot = whole_ss.crop((top_left_x, top_left_y, bottom_right_x, bottom_right_y))
-    region_screenshot.save(f'{mat_i}{mat_j}.png')
+    # region_screenshot.save(f'{mat_i}{mat_j}.png')
     if region_screenshot.getpixel((0,0)) == (255, 255, 255):
         alrClicked[mat_i][mat_j] = False
         return None
-    elif region_screenshot.getpixel((4,9)) == THREE:
-        # its actually 5
+    elif region_screenshot.getpixel((4,7)) == SIX:
+        alrClicked[mat_i][mat_j] = True
+        return 6
+    elif region_screenshot.getpixel((4,7)) == FIVE:
         alrClicked[mat_i][mat_j] = True
         return 5
     elif region_screenshot.getpixel((9,7)) == ONE:
@@ -100,7 +103,7 @@ def getCell(whole_ss, top_left_x, top_left_y, bottom_right_x, bottom_right_y, ma
 
 
 def obtain_mine():
-    whole_screenshot = ImageGrab.grab(bbox=(120,225, 120+(COLS+1)*20, 225+(ROWS+1)*20))
+    whole_screenshot = ImageGrab.grab(bbox=(MI_WINOW_TOP_LEFT_X, MI_WINOW_TOP_LEFT_Y, MI_WINOW_TOP_LEFT_X+(COLS+1)*20, MI_WINOW_TOP_LEFT_Y+(ROWS+1)*20))
     whole_screenshot.save('ss.png')                      
     # return None                
     mineMap = [[] for i in range(ROWS)]
@@ -130,7 +133,6 @@ while True:
     # for row in mineMap:
     #     print(row)
 
-
     probsBoard = calcprobs(mineMap, MINES)
     # for row in probsBoard:
     #     print(row)
@@ -139,7 +141,7 @@ while True:
         for j in range(len(probsBoard[0])):
             if probsBoard[i][j] == 0.0 and not alrClicked[i][j]:
                 moved = True
-                pyautogui.click(138+j*20, 250+i*20)
+                pyautogui.click(MI_WINOW_TOP_LEFT_X+18+j*20, MI_WINOW_TOP_LEFT_Y+25+i*20)
                 # time.sleep(1)
                 alrClicked[i][j] = True
                 # time.sleep(0.00001)
@@ -161,6 +163,20 @@ while True:
                     min_prob = probsBoard[i][j]
                     min_prob_cell = (i, j)
 
-        pyautogui.click(138 + min_prob_cell[1] * 20, 250 + min_prob_cell[0] * 20)
+        pyautogui.click(MI_WINOW_TOP_LEFT_X+18 + min_prob_cell[1] * 20, MI_WINOW_TOP_LEFT_Y +25 + min_prob_cell[0] * 20)
         alrClicked[min_prob_cell[0]][min_prob_cell[1]] = True
+        moved = True
         # time.sleep(0.01)
+
+    if not moved:
+        import random
+
+        # Find all the indices where alrClicked is False
+        indices = [(i, j) for i in range(len(alrClicked)) for j in range(len(alrClicked[0])) if not alrClicked[i][j]]
+
+        # Randomly pick an index from the list
+        if indices:
+            i, j = random.choice(indices)
+            pyautogui.click(MI_WINOW_TOP_LEFT_X+18 + j * 20, MI_WINOW_TOP_LEFT_Y+25 + i * 20)
+            alrClicked[i][j] = True
+            moved = True
