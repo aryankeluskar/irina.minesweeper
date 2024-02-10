@@ -27,7 +27,7 @@ Built using Python. <b>I</b>nquisitive <b>R</b>iddler <b>I</b>nvestigating <b>N<
 
 |Beginner|Intermediate|Expert|
 |-|-|-|
-|<video autoplay loop muted playsinline>  <source src="./Beginner.mp4" type="video/mp4"> </video> |<video autoplay loop muted playsinline>  <source src="./Intermediate.mp4" type="video/mp4"> </video> | <video autoplay loop muted playsinline>  <source src="./Expert.mp4" type="video/mp4"> </video> |
+| <img src="./Beginner.gif"> | <img src="./Intermediate.gif"> | <img src="./Expert.gif"> |
 
 #### You get: _Finally solve the game, Flex to friends, Peace of Mind_ <br> I get _(hopefully): Star, Heart, Follow :)_
 
