@@ -222,7 +222,7 @@ def calcprobs(board,rem_mines):
         for i in range(len(border_sqrs)):
             if solution.args[i] == variables[i]:
                 parameters.append(variables[i])
-        print("Number of parameters", len(parameters))
+        # print("Number of parameters", len(parameters))
 
         # The terms of each expression in the solution which are constants (For example, if an expression is a1+a2-2, then -2 is  the constant)
         constants = solution.subs(list(zip(parameters, [0] * len(parameters))))
