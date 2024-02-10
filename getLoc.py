@@ -1,6 +1,8 @@
 import pyautogui
 from pynput.mouse import Listener
 
+# useful for calibrating the pixel location in case you are not using the provided exe file or want to use a different version
+
 def get_pixel_location():
     x, y = pyautogui.position()
     print(f"Pixel location: x={x}, y={y}")
