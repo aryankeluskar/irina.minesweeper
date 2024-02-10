@@ -3,6 +3,8 @@ import win32gui, win32con, win32api
 import subprocess
 import time
 
+# Only for trial purposes, do not run this code to maintain your sanity (it creates 100+ images and takes up a lot of space on disk)
+
 exe_path = './WINMINE.EXE'
 
 def getCell(top_left_x, top_left_y, bottom_right_x, bottom_right_y, mat_i, mat_j):
