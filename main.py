@@ -40,8 +40,8 @@ exe_path = './WINMINE.EXE'
 
 probsBoard = [[0.0 for i in range(COLS)] for j in range(ROWS)]
 alrClicked = [[True for i in range(COLS)] for j in range(ROWS)]
-
 mine_window = win32gui.FindWindow(None, "Minesweeper")
+
 if mine_window == 0:
     process = subprocess.Popen(exe_path)
     time.sleep(2)
@@ -52,6 +52,7 @@ else:
     win32gui.SetForegroundWindow(mine_window)
     time.sleep(5)
     
+mine_window = win32gui.FindWindow(None, "Minesweeper")
 screen_region = win32gui.GetWindowRect(mine_window)
 # MI_WINOW_TOP_LEFT_X = 120
 # MI_WINOW_TOP_LEFT_Y = 225
@@ -82,6 +83,7 @@ def getCell(whole_ss, top_left_x, top_left_y, bottom_right_x, bottom_right_y, ma
     # region_screenshot.save(f'{mat_i}{mat_j}.png')
     if region_screenshot.getpixel((13,12)) == MINE or region_screenshot.getpixel((9,14)) == MINE:
         print("Either mine found or game successfully completed")
+        time.sleep(5)
         sys.exit(0)
     elif region_screenshot.getpixel((0,0)) == (255, 255, 255):
         alrClicked[mat_i][mat_j] = False
@@ -142,6 +144,7 @@ while True:
             if j == -1:
                 # stop_screen_record(ss_rec)
                 print("MINE FOUND")
+                time.sleep(5)
                 sys.exit(0)
 
 
