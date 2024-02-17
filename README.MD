@@ -45,7 +45,7 @@ The app will auto-calibrate itself to your device's display assuming that you ad
 
     python main.py
 
-And let the magic (a.k.a. irina) shine brighter than all neon on broadway(just normal irina stuff)!
+And let the magic (a.k.a. irina) shine brighter than all neon on broadway (just normal moonlight stuff)!
    
 ## How does it work?
 It starts by randomly tapping 3 cells, then finds the probability of surrounding cells being a mine while training a Reinforcement Learning model in background to predict the next set of non-mine cells and click on them. This process repeats until there are no non-mine cells remaining. Motivation? My close friend and I were getting nostalgic over our high school memories of playing this beautifully haunting game but never winning, so I built this project to redeem our younger selves.
