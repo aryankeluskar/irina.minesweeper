@@ -1,4 +1,4 @@
-# irina - An AI That Solves Minesweeper!
+# irina - AI That Solves Minesweeper!
 
 Built using Python. <b>I</b>nquisitive <b>R</b>iddler <b>I</b>nvestigating <b>N</b>avigational <b>A</b>rteries (in minesweeper), or irina for short (cause she is), is an Artifically Intelligent Model to solve Mineweeper by utilizing a probabilstic approach. Most Exciting Thing? This algorithm is nearing world record timings and this is just the beginning.
 
