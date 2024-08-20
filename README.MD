@@ -52,4 +52,4 @@ It starts by randomly tapping 3 cells, then finds the probability of surrounding
 
 ## Support this project!
 ### This has been quite an ambitious project (and a super memorable one ofc)! Please consider leaving a 🌟 if this added value to your wonderful life :)
-### Made with pure love and [freshman fascination](## "it's a real term i swear"). Visit my website at [aryankeluskar.github.io](https://aryankeluskar.github.io) <3
+### Made with pure love and [freshman fascination](https://aryankeluskar.com/freshman%20fascination). Visit my website at [aryankeluskar.github.io](https://aryankeluskar.github.io) <3
